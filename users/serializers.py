@@ -1,7 +1,8 @@
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from rest_framework import serializers
+from .models import customUser as User
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -10,16 +11,14 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('name', 'email', 'password', 'role') 
+        fields = ('name', 'email', 'password')
 
     def create(self, validated_data):
         display_name = validated_data.pop('display_name', '')
-        role = validated_data.get('role','team-member')
         user = User.objects.create_user(
             email=validated_data['email'],
             password=validated_data['password'],
-            display_name=display_name,
-            role=role
+            display_name=display_name
         )
         return user
 
@@ -30,7 +29,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['email'] = user.email
         token['name'] = getattr(user, 'display_name', '')
-        token['role'] = user.role
         return token
 
 

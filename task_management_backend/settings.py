@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     "corsheaders",
     "users",
+    'tasks',
+    'annotations',
 ]
 
 MIDDLEWARE = [
