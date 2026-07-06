@@ -29,8 +29,9 @@ class customUser(AbstractUser):
     username = None  
     email = models.EmailField(max_length=254, unique=True)    
     display_name = models.CharField(max_length=254, blank=True, null=True) 
+    role = models.CharField(max_length=50, default='team-member')
     
-    objects = CustomUserManager()  
+    objects = CustomUserManager()
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
