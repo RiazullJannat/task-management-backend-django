@@ -54,7 +54,8 @@ AUTH_USER_MODEL = 'users.customUser'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'EXCEPTION_HANDLER': 'task_management_backend.exception_handlers.custom_exception_handler',
 }
 
 SIMPLE_JWT = {

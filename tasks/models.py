@@ -31,5 +31,20 @@ class Task(models.Model):
     class Meta:
         ordering = ['position']
 
+    def save(self, *args, **kwargs):
+        if not self.id and self.position == 0:
+            last_task = Task.objects.filter(
+                user=self.user,
+                due_date=self.due_date,
+                status=self.status
+            ).order_by('-position').first()
+            
+            if last_task:
+                self.position = last_task.position + 1
+            else:
+                self.position = 0 
+                
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.title
