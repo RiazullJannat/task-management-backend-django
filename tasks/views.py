@@ -11,6 +11,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Task.objects.filter(user=self.request.user)
+        print("query params =>> ", self.request.query_params)
         date_param = self.request.query_params.get('date', None)
         if date_param is not None:
             queryset = queryset.filter(due_date=date_param)
