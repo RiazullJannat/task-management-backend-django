@@ -11,11 +11,9 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Task.objects.filter(user=self.request.user)
-
         date_param = self.request.query_params.get('date', None)
         if date_param is not None:
             queryset = queryset.filter(due_date=date_param)
-
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -56,6 +54,3 @@ class TaskViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.delete()
         return success_response('Task deleted successfully', None)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
