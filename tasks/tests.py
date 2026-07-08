@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
+from .models import Task
 from .serializers import TaskSerializer
 
 
@@ -61,3 +62,42 @@ class TaskViewSetTests(TestCase):
         self.assertTrue(response.data['success'])
         self.assertEqual(response.data['message'], 'Task created successfully')
         self.assertIn('id', response.data['data'])
+
+    def test_list_filters_by_title_and_date(self):
+        Task.objects.create(
+            user=self.user,
+            title='Alpha task',
+            description='First task',
+            status='TODO',
+            priority='HIGH',
+            due_date='2026-07-10',
+            tags=['work'],
+            position=1,
+        )
+        Task.objects.create(
+            user=self.user,
+            title='Beta task',
+            description='Second task',
+            status='TODO',
+            priority='HIGH',
+            due_date='2026-07-10',
+            tags=['work'],
+            position=2,
+        )
+        Task.objects.create(
+            user=self.user,
+            title='Alpha task',
+            description='Third task',
+            status='TODO',
+            priority='HIGH',
+            due_date='2026-07-11',
+            tags=['work'],
+            position=3,
+        )
+
+        response = self.client.get('/tasks/', {'date': '2026-07-10', 'title': 'alpha'}, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.data['success'])
+        self.assertEqual(len(response.data['data']), 1)
+        self.assertEqual(response.data['data'][0]['title'], 'Alpha task')

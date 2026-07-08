@@ -11,10 +11,17 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Task.objects.filter(user=self.request.user)
-        print("query params =>> ", self.request.query_params)
         date_param = self.request.query_params.get('date', None)
+        title_param = self.request.query_params.get('title', None)
+
         if date_param is not None:
             queryset = queryset.filter(due_date=date_param)
+
+        if title_param is not None:
+            normalized_title = title_param.strip().replace('+', ' ')
+            if normalized_title:
+                queryset = queryset.filter(title__icontains=normalized_title)
+
         return queryset
 
     def list(self, request, *args, **kwargs):
