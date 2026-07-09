@@ -13,7 +13,20 @@ class ProjectViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Project.objects.filter(user=self.request.user)
+        queryset = Project.objects.filter(user=self.request.user)
+        
+        date_param = self.request.query_params.get('date', None)
+        title_param = self.request.query_params.get('title', None)
+
+        if date_param is not None:
+            queryset = queryset.filter(created_at__date=date_param)
+
+        if title_param is not None:
+            normalized_title = title_param.strip().replace('+', ' ')
+            if normalized_title:
+                queryset = queryset.filter(title__icontains=normalized_title)
+
+        return queryset
 
     def create(self, request, *args, **kwargs):
         try:
@@ -60,11 +73,15 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response({'message': f'An error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class ImageViewSet(viewsets.ModelViewSet):
-    queryset = Image.objects.all()
     serializer_class = ImageSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return Image.objects.filter(project__user=self.request.user)
+
 class AnnotationViewSet(viewsets.ModelViewSet):
-    queryset = Annotation.objects.all()
     serializer_class = AnnotationSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Annotation.objects.filter(image__project__user=self.request.user)
