@@ -14,14 +14,13 @@ class RegisterView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({
-                "success": True,
                 "message": "User registered successfully",
                 "data": serializer.data
             }, status=status.HTTP_201_CREATED)
             
         return Response({
-            "success": False,
-            "message": serializer.errors
+            "message": "Registration failed",
+            "errors": serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -30,6 +29,5 @@ class LogoutView(APIView):
 
     def post(self, request):
         return Response({
-            "success": True,
             "message": "Logout successful"
         }, status=status.HTTP_200_OK)

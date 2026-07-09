@@ -1,5 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
+import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -11,8 +13,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ckd0m#1w^ey$z^pg!0!qivv297p=w9f7ns=xe!_7%ta=kvo89b'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+# Read .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+DEBUG = env('DEBUG')
+IMGBB_API_KEY = env('IMGBB_API_KEY')
 
 ALLOWED_HOSTS = []
 
@@ -56,6 +66,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'EXCEPTION_HANDLER': 'task_management_backend.exception_handlers.custom_exception_handler',
+    'DEFAULT_RENDERER_CLASSES': (
+        'task_management_backend.renderers.CustomJSONRenderer',
+    ),
 }
 
 SIMPLE_JWT = {

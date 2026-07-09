@@ -21,6 +21,18 @@
     {
       "key": "task_id",
       "value": "1"
+    },
+    {
+      "key": "project_id",
+      "value": "1"
+    },
+    {
+      "key": "image_id",
+      "value": "1"
+    },
+    {
+      "key": "annotation_id",
+      "value": "1"
     }
   ],
   "item": [
@@ -290,6 +302,224 @@
             }
           },
           "response": []
+        }
+      ]
+    },
+    {
+      "name": "Annotations App",
+      "item": [
+        {
+          "name": "Projects",
+          "item": [
+            {
+              "name": "List Projects",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/annotations/projects/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "annotations",
+                    "projects",
+                    ""
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Project",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "title",
+                      "value": "Medical Image Dataset",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Dataset containing MRI scans",
+                      "type": "text"
+                    },
+                    {
+                      "key": "images",
+                      "type": "file",
+                      "src": []
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/annotations/projects/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "annotations",
+                    "projects",
+                    ""
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Project",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/annotations/projects/{{project_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "annotations",
+                    "projects",
+                    "{{project_id}}",
+                    ""
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Images",
+          "item": [
+            {
+              "name": "List Images",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/annotations/images/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "annotations",
+                    "images",
+                    ""
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Image",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"project\": \"{{project_id}}\",\n  \"image_url\": \"https://example.com/image.jpg\",\n  \"order_index\": 1,\n  \"width\": 800,\n  \"height\": 600\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/annotations/images/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "annotations",
+                    "images",
+                    ""
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Annotations",
+          "item": [
+            {
+              "name": "List Annotations",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/annotations/annotations/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "annotations",
+                    "annotations",
+                    ""
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Annotation",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"image\": \"{{image_id}}\",\n  \"coordinates\": [{\"x\": 120, \"y\": 200}, {\"x\": 150, \"y\": 250}, {\"x\": 100, \"y\": 300}],\n  \"fill_color\": \"rgba(255, 99, 71, 0.5)\",\n  \"label\": \"Car\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/annotations/annotations/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "annotations",
+                    "annotations",
+                    ""
+                  ]
+                }
+              }
+            }
+          ]
         }
       ]
     }
