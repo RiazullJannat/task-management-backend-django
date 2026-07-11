@@ -27,7 +27,7 @@ DEBUG = env('DEBUG')
 IMGBB_API_KEY = env('IMGBB_API_KEY')
 DATABASE_URL = env('DATABASE_URL')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
