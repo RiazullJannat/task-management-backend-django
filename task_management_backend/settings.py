@@ -2,6 +2,7 @@ from pathlib import Path
 from datetime import timedelta
 import environ
 import os
+from urllib.parse import parse_qsl, urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,7 +16,8 @@ SECRET_KEY = 'django-insecure-ckd0m#1w^ey$z^pg!0!qivv297p=w9f7ns=xe!_7%ta=kvo89b
 
 env = environ.Env(
     # set casting, default value
-    DEBUG=(bool, False)
+    DEBUG=(bool, False),
+    DATABASE_URL=(str, f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 )
 
 # Read .env file
@@ -23,6 +25,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 DEBUG = env('DEBUG')
 IMGBB_API_KEY = env('IMGBB_API_KEY')
+DATABASE_URL = env('DATABASE_URL')
 
 ALLOWED_HOSTS = []
 
@@ -102,12 +105,26 @@ WSGI_APPLICATION = 'task_management_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DATABASE_URL.startswith(('postgres://', 'postgresql://')):
+    tmpPostgres = urlparse(DATABASE_URL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': tmpPostgres.path.replace('/', ''),
+            'USER': tmpPostgres.username,
+            'PASSWORD': tmpPostgres.password,
+            'HOST': tmpPostgres.hostname,
+            'PORT': tmpPostgres.port or 5432,
+            'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation

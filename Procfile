@@ -1,0 +1,1 @@
+web: gunicorn task_management_backend.wsgi:application

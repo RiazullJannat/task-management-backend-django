@@ -6,7 +6,11 @@ django-cors-headers==4.9.0
 django-environ==0.14.0
 djangorestframework==3.17.1
 djangorestframework_simplejwt==5.5.1
+gunicorn==26.0.0
 idna==3.18
+packaging==26.2
+psycopg==3.2.2
+psycopg-binary==3.2.2
 PyJWT==2.13.0
 requests==2.34.2
 sqlparse==0.5.5
