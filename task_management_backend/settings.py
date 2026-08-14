@@ -11,18 +11,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ckd0m#1w^ey$z^pg!0!qivv297p=w9f7ns=xe!_7%ta=kvo89b'
-
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False),
+    SECRET_KEY=(str, 'django-insecure-local-dev-key-do-not-use-in-production'),
+    IMGBB_API_KEY=(str, ''),
     DATABASE_URL=(str, f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 )
 
 # Read .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 IMGBB_API_KEY = env('IMGBB_API_KEY')
 DATABASE_URL = env('DATABASE_URL')
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -162,3 +164,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
