@@ -5,6 +5,14 @@ from rest_framework.permissions import AllowAny
 from .response_utils import success_response
 
 
+@api_view(['HEAD'])
+@permission_classes([AllowAny])
+def health_check(request):
+    return success_response('Service is healthy', {
+        'status': 'ok',
+    })
+
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def api_root(request):
@@ -22,5 +30,6 @@ def api_root(request):
             'projects': f'{base}/annotations/projects/',
             'images': f'{base}/annotations/images/',
             'annotations': f'{base}/annotations/annotations/',
+            'health': f'{base}/health',
         },
     })
